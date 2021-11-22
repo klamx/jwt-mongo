@@ -22,7 +22,7 @@ router.post('/singup', async (req, res, next) => {
 });
 
 router.post('/singin', async (req, res, next) => {
-  cosnt = { email, password } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -48,14 +48,19 @@ router.get('/me', async (req, res, next) => {
       message: 'No token provided',
     });
   }
-  const decoded = jwt.verify(token, config.secret);
-  // console.log(decoded);
-  const user = await User.findById(decoded.id, { password: 0 });
-  if (!user) {
-    return res.status(404).send('No user found');
-  }
 
-  res.json(user);
+  try {
+    const decoded = jwt.verify(token, config.secret);
+    // console.log(decoded);
+    const user = await User.findById(decoded.id, { password: 0 });
+    if (!user) {
+      return res.status(404).send('No user found');
+    }
+
+    res.json(user);
+  } catch (err) {
+    res.json({ message: err.message });
+  }
 });
 
 module.exports = router;
