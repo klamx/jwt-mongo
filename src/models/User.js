@@ -6,4 +6,8 @@ const userSchema = new Schema({
   password: String,
 });
 
+userSchema.methods.validatePassword = function (password) {
+  return this.password === password;
+};
+
 module.exports = model('User', userSchema);
