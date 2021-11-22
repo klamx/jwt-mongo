@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose
-  .connect('mongodb://localhost/simplejwt', {
+  .connect('mongodb://localhost/usersFluxua', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

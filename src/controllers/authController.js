@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+// const config = require('../config');
 
 const User = require('../models/User');
 
@@ -14,7 +14,7 @@ router.post('/singup', async (req, res, next) => {
   });
 
   await user.save();
-  const token = jwt.sign({ id: user._id }, config.secret, {
+  const token = jwt.sign({ id: user._id }, process.env.SECRET, {
     expiresIn: 60 * 60 * 24,
   });
 
@@ -34,7 +34,7 @@ router.post('/singin', async (req, res, next) => {
     return res.status(401).json({ auth: false, token: null });
   }
 
-  const token = jwt.sign({ id: user._id }, config.secret, {
+  const token = jwt.sign({ id: user._id }, process.env.SECRET, {
     expiresIn: 60 * 60 * 24,
   });
   res.json({ auth: true, token });
@@ -50,7 +50,7 @@ router.get('/me', async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, config.secret);
+    const decoded = jwt.verify(token, process.env.SECRET);
     // console.log(decoded);
     const user = await User.findById(decoded.id, { password: 0 });
     if (!user) {
